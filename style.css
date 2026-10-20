@@ -429,6 +429,13 @@ html.dark .blob-3 { background: radial-gradient(circle, #5eead4 0%, transparent 
 .domain-card.domain-wide { grid-column: 1 / -1; flex-direction: row; align-items: center; gap: 16px; }
 .domain-card.domain-wide .domain-icon { margin-bottom: 0; }
 
+/* pe ecrane mai late: mereu 3 coloane; dacă ultimul domeniu rămâne singur pe rând, ocupă tot rândul */
+@media (min-width: 561px) {
+  .domain-grid { grid-template-columns: repeat(3, 1fr); }
+  .domain-card:not(.domain-wide):last-child:nth-child(3n+2) { grid-column: 1 / -1; flex-direction: row; align-items: center; gap: 16px; }
+  .domain-card:not(.domain-wide):last-child:nth-child(3n+2) .domain-icon { margin-bottom: 0; }
+}
+
 .domain-icon {
   width: 54px;
   height: 54px;
@@ -828,6 +835,44 @@ html.dark .tag-domain { color: var(--c1); }
 @media (hover: hover) { .chip:hover { border-color: var(--brand-1); } }
 .chip.selected { background: linear-gradient(120deg, var(--brand-1), var(--brand-2)); border-color: transparent; color: #fff; }
 
+/* rândul „Limba” din setări: arată ca o setare, dar e un buton care duce la ecranul cu limbi */
+.setting-link {
+  width: 100%;
+  background: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  flex-wrap: nowrap;
+}
+.setting-value { display: flex; align-items: center; gap: 6px; color: var(--muted); font-weight: 600; white-space: nowrap; }
+@media (hover: hover) { .setting-link:hover .setting-value { color: var(--brand-1); } .setting-link:hover .menu-arrow { transform: translateX(4px); } }
+
+/* ecranul cu limbi: câte un buton mare pentru fiecare limbă */
+.lang-list { display: grid; gap: 14px; max-width: 480px; margin: 0 auto; }
+.lang-code {
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 18px;
+  background: var(--surface-2);
+}
+.lang-check { font-size: 22px; font-weight: 700; color: var(--brand-1); opacity: 0; }
+.lang-btn.selected { border: 2px solid var(--brand-1); }
+.lang-btn.selected .lang-code { background: linear-gradient(120deg, var(--brand-1), var(--brand-2)); color: #fff; }
+.lang-btn.selected .lang-check { opacity: 1; }
+
+/* până traduce app.js pagina în limba aleasă, textul stă ascuns (doar o clipă) */
+html.traducere .app { visibility: hidden; }
+
 /* întrerupătorul on/off */
 .switch { position: relative; display: inline-block; width: 56px; height: 32px; flex-shrink: 0; }
 .switch input { opacity: 0; width: 0; height: 0; position: absolute; }
@@ -916,8 +961,8 @@ input[type="range"] { width: 210px; accent-color: var(--brand-2); cursor: pointe
   .domain-card:not(.domain-wide):last-child:nth-child(even) { grid-column: 1 / -1; flex-direction: row; align-items: center; gap: 16px; }
   .domain-card:not(.domain-wide):last-child:nth-child(even) .domain-icon { margin-bottom: 0; }
   /* iconițele de sub titlu, mai mici, ca să încapă toate pe un rând */
-  .hero-domains { gap: 5px; }
-  .hero-dot { width: 30px; height: 30px; font-size: 16px; border-radius: 10px; }
+  .hero-domains { gap: 4px; }
+  .hero-dot { width: 28px; height: 28px; font-size: 15px; border-radius: 9px; }
   .diff-list { grid-template-columns: 1fr; }
   .card { padding: 20px; border-radius: 22px; }
   .question { font-size: 20px; }

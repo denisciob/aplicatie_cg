@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ro">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,6 +20,12 @@
       // dacă nu ai ales încă tema, o urmăm pe cea a telefonului sau a calculatorului
       var dark = ("dark" in s) ? s.dark : (window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches);
       if (dark) document.documentElement.classList.add("dark");
+      // dacă ai ales altă limbă decât engleza, ascundem textul până îl traduce app.js (ca să nu „clipească” engleza)
+      if (s.limba && s.limba !== "en") {
+        document.documentElement.lang = s.limba;
+        document.documentElement.classList.add("traducere");
+        setTimeout(function () { document.documentElement.classList.remove("traducere"); }, 3000);
+      }
     } catch (e) {}
   </script>
 
@@ -43,6 +49,7 @@
     <span class="bubble" style="--x:14%; --y:91%; --s:38px; --mx:30%;              --my:94%; --ms:30px; --r:-10deg; --d:-2.5s; --c:#e11d48">🔭</span>
     <span class="bubble" style="--x:82%; --y:93%; --s:36px; --mx:62%;              --my:95%; --ms:28px; --r:9deg;   --d:-3.5s; --c:#4338ca">⚛️</span>
     <span class="bubble" style="--x:93%; --y:27%; --s:40px; --mx:calc(100% - 18px); --my:68%; --ms:32px; --r:-7deg;  --d:-4.5s; --c:#65a30d">🥗</span>
+    <span class="bubble" style="--x:9%;  --y:30%; --s:40px; --mx:-12px;            --my:74%; --ms:32px; --r:8deg;   --d:-1.5s; --c:#a21caf">🧪</span>
   </div>
 
   <!-- muzica de fundal: fișierul muzica.mp3 trebuie să stea în același folder -->
@@ -61,8 +68,8 @@
 
       <header class="hero">
         <div class="logo">🧠</div>
-        <h1>General Knowledge Quiz</h1>
-        <p class="subtitle">Nine subjects, hundreds of facts worth knowing.</p>
+        <h1 data-i18n="appTitle">General Knowledge Quiz</h1>
+        <p class="subtitle" data-i18n="subtitle">Ten subjects, hundreds of facts worth knowing.</p>
         <!-- iconițele domeniilor, generate din app.js -->
         <div id="hero-domains" class="hero-domains"></div>
       </header>
@@ -73,21 +80,21 @@
       <nav class="menu">
         <button id="btn-practice" class="menu-btn menu-main">
           <span class="menu-icon">📝</span>
-          <span class="menu-text"><strong>Practice test</strong><small>Choose a category and a difficulty</small></span>
+          <span class="menu-text"><strong data-i18n="practice">Practice test</strong><small data-i18n="practiceSub">Choose a category and a difficulty</small></span>
           <svg class="menu-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
         </button>
         <button id="btn-settings" class="menu-btn">
           <span class="menu-icon">⚙️</span>
-          <span class="menu-text"><strong>Settings</strong><small>Questions, theme and sound</small></span>
+          <span class="menu-text"><strong data-i18n="settings">Settings</strong><small data-i18n="settingsSub">Questions, language, theme and sound</small></span>
           <svg class="menu-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
         </button>
       </nav>
 
       <!-- cele trei cifre de sub meniu, completate din app.js -->
       <div class="stats">
-        <div class="stat"><strong id="stat-questions">0</strong><span>questions</span></div>
-        <div class="stat"><strong id="stat-categories">0</strong><span>categories ready</span></div>
-        <div class="stat"><strong id="stat-tests">0</strong><span>tests taken</span></div>
+        <div class="stat"><strong id="stat-questions">0</strong><span data-i18n="statQuestions">questions</span></div>
+        <div class="stat"><strong id="stat-categories">0</strong><span data-i18n="statCategories">categories ready</span></div>
+        <div class="stat"><strong id="stat-tests">0</strong><span data-i18n="statTests">tests taken</span></div>
       </div>
     </section>
 
@@ -95,11 +102,11 @@
     <section id="screen-domain" class="screen">
       <div class="screen-top">
         <button class="btn-back" data-go="screen-menu">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Back
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg><span data-i18n="back">Back</span>
         </button>
       </div>
-      <h2 class="screen-title">Choose a category</h2>
-      <p class="screen-subtitle">Pick one subject, or mix them all.</p>
+      <h2 class="screen-title" data-i18n="chooseCategory">Choose a category</h2>
+      <p class="screen-subtitle" data-i18n="chooseCategorySub">Pick one subject, or mix them all.</p>
       <!-- cardurile domeniilor, generate din app.js -->
       <div id="domain-grid" class="domain-grid"></div>
     </section>
@@ -108,12 +115,12 @@
     <section id="screen-difficulty" class="screen">
       <div class="screen-top">
         <button class="btn-back" data-go="screen-domain">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Back
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg><span data-i18n="back">Back</span>
         </button>
       </div>
       <!-- domeniul ales (iconiță + nume) -->
       <div id="diff-header" class="diff-header"></div>
-      <h2 class="screen-title">Choose difficulty</h2>
+      <h2 class="screen-title" data-i18n="chooseDifficulty">Choose difficulty</h2>
       <!-- cardurile Easy / Medium / Hard / Mixed, generate din app.js -->
       <div id="diff-list" class="diff-list"></div>
     </section>
@@ -122,12 +129,12 @@
     <section id="screen-quiz" class="screen">
       <div class="quiz-top">
         <button id="btn-quit" class="btn-back">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Back
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg><span data-i18n="back">Back</span>
         </button>
         <div class="pills">
-          <span id="pill-time" class="pill" title="Time">⏱ 0:00</span>
-          <span id="pill-streak" class="pill pill-streak" title="Correct answers in a row">🔥 0</span>
-          <span id="pill-score" class="pill pill-score" title="Score">★ 0</span>
+          <span id="pill-time" class="pill" title="Time" data-i18n-title="timeTitle">⏱ 0:00</span>
+          <span id="pill-streak" class="pill pill-streak" title="Correct answers in a row" data-i18n-title="streakTitle">🔥 0</span>
+          <span id="pill-score" class="pill pill-score" title="Score" data-i18n-title="scoreTitle">★ 0</span>
         </div>
       </div>
 
@@ -153,8 +160,8 @@
           <p id="feedback-text"></p>
         </div>
 
-        <button id="btn-next" class="btn btn-next">Next</button>
-        <p class="key-hint">Keyboard: A–D or 1–4 to answer, Enter for the next question</p>
+        <button id="btn-next" class="btn btn-next" data-i18n="next">Next</button>
+        <p class="key-hint" data-i18n="keyHint">Keyboard: A–D or 1–4 to answer, Enter for the next question</p>
       </div>
     </section>
 
@@ -169,36 +176,36 @@
           </svg>
           <div class="ring-text">
             <strong id="result-points">0</strong>
-            <span>of <span id="result-total">0</span></span>
+            <span><span data-i18n="ringOf">of</span> <span id="result-total">0</span></span>
           </div>
         </div>
 
         <div id="result-emoji" class="result-emoji">🏆</div>
-        <h2 id="result-title">Quiz complete!</h2>
+        <h2 id="result-title" data-i18n="quizComplete">Quiz complete!</h2>
         <div id="result-tags" class="result-tags"></div>
         <div id="result-badge" class="badge hidden"></div>
         <p id="result-message" class="result-message"></p>
 
         <div class="result-buttons">
-          <button id="btn-again" class="btn btn-primary">Play again</button>
-          <button id="btn-menu" class="btn btn-secondary">Menu</button>
+          <button id="btn-again" class="btn btn-primary" data-i18n="playAgain">Play again</button>
+          <button id="btn-menu" class="btn btn-secondary" data-i18n="menu">Menu</button>
         </div>
       </div>
 
       <!-- greșelile din testul tocmai terminat -->
       <div class="card section-card">
-        <h3>Review your mistakes</h3>
+        <h3 data-i18n="reviewTitle">Review your mistakes</h3>
         <div id="review-list"></div>
       </div>
 
       <!-- istoricul domeniului jucat -->
       <div class="card section-card">
         <h3 id="history-title">Your history</h3>
-        <h4 class="section-title">Best scores</h4>
+        <h4 class="section-title" data-i18n="bestScores">Best scores</h4>
         <div id="history-best" class="best-grid"></div>
-        <h4 class="section-title">Past tests</h4>
+        <h4 class="section-title" data-i18n="pastTests">Past tests</h4>
         <div id="history-list"></div>
-        <button id="btn-clear-history" class="btn btn-danger">Clear history for this category</button>
+        <button id="btn-clear-history" class="btn btn-danger" data-i18n="clearHistoryBtn">Clear history for this category</button>
       </div>
     </section>
 
@@ -206,47 +213,69 @@
     <section id="screen-settings" class="screen">
       <div class="screen-top">
         <button class="btn-back" data-go="screen-menu">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Back
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg><span data-i18n="back">Back</span>
         </button>
       </div>
-      <h2 class="screen-title">Settings</h2>
-      <p class="screen-subtitle">Saved automatically.</p>
+      <h2 class="screen-title" data-i18n="settings">Settings</h2>
+      <p class="screen-subtitle" data-i18n="settingsSaved">Saved automatically.</p>
 
       <div class="card settings-card">
         <div class="setting">
-          <div class="setting-label"><strong>Questions per test</strong><small>If a category has fewer, you get all of them</small></div>
+          <div class="setting-label"><strong data-i18n="qPerTest">Questions per test</strong><small data-i18n="qPerTestSub">If a category has fewer, you get all of them</small></div>
           <div id="count-group" class="chip-group">
             <button class="chip" data-count="10">10</button>
             <button class="chip" data-count="20">20</button>
             <button class="chip" data-count="30">30</button>
-            <button class="chip" data-count="all">All</button>
+            <button class="chip" data-count="all" data-i18n="all">All</button>
           </div>
         </div>
 
+        <!-- limba aplicației: un singur buton, care deschide ecranul cu cele 4 limbi -->
+        <button id="btn-language" class="setting setting-link">
+          <span class="setting-label"><strong data-i18n="language">Language</strong><small data-i18n="languageSub">Buttons, questions and explanations</small></span>
+          <span class="setting-value">
+            <span id="lang-current">English</span>
+            <svg class="menu-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+          </span>
+        </button>
+
         <div class="setting">
-          <div class="setting-label"><strong>Dark mode</strong><small>Easier on the eyes at night</small></div>
+          <div class="setting-label"><strong data-i18n="darkMode">Dark mode</strong><small data-i18n="darkModeSub">Easier on the eyes at night</small></div>
           <label class="switch"><input type="checkbox" id="set-dark"><span class="slider"></span></label>
         </div>
 
         <div class="setting">
           <div class="setting-label">
-            <strong>Background music</strong>
-            <small>Plays muzica.mp3 from the app folder</small>
-            <small id="music-note" class="setting-warning hidden">muzica.mp3 was not found in the app folder.</small>
+            <strong data-i18n="music">Background music</strong>
+            <small data-i18n="musicSub">Plays muzica.mp3 from the app folder</small>
+            <small id="music-note" class="setting-warning hidden" data-i18n="musicMissing">muzica.mp3 was not found in the app folder.</small>
           </div>
           <label class="switch"><input type="checkbox" id="set-music"><span class="slider"></span></label>
         </div>
 
         <div class="setting">
-          <div class="setting-label"><strong>Music volume</strong><small id="volume-label">40%</small></div>
+          <div class="setting-label"><strong data-i18n="volume">Music volume</strong><small id="volume-label">40%</small></div>
           <input type="range" id="music-volume" min="0" max="100" step="5" value="40" aria-label="Music volume">
         </div>
 
         <div class="setting">
-          <div class="setting-label"><strong>Sound effects</strong><small>Short sounds for correct and wrong answers</small></div>
+          <div class="setting-label"><strong data-i18n="effects">Sound effects</strong><small data-i18n="effectsSub">Short sounds for correct and wrong answers</small></div>
           <label class="switch"><input type="checkbox" id="set-effects"><span class="slider"></span></label>
         </div>
       </div>
+    </section>
+
+    <!-- ================= ALEGEREA LIMBII ================= -->
+    <section id="screen-language" class="screen">
+      <div class="screen-top">
+        <button class="btn-back" data-go="screen-settings">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg><span data-i18n="back">Back</span>
+        </button>
+      </div>
+      <h2 class="screen-title" data-i18n="language">Language</h2>
+      <p class="screen-subtitle" data-i18n="languageSub">Buttons, questions and explanations</p>
+      <!-- butoanele English / Română / Français / Deutsch, create din app.js -->
+      <div id="lang-list" class="lang-list"></div>
     </section>
 
   </div>
